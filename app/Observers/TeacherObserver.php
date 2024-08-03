@@ -31,8 +31,10 @@ class TeacherObserver
      *
      * @return void
      */
-    public function deleting(Teacher $teacher)
+    public function deleted(Teacher $teacher)
     {
+//        $userModel = config('admin.database.users_model');
+//        $adminUserModel = new $userModel();
     }
 
     /**
