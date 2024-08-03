@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends AdminController
 {
@@ -68,6 +69,21 @@ class TeacherController extends AdminController
         $form->text('name', __('Name'))->rules('required');
         $form->text('account', __('Account'))->rules('required');
         $form->password('password', __('Password'))->rules('required');
+
+        $form->saving(function (Form  $form){
+            // 同时创建admin管理员
+            $userModel = config('admin.database.users_model');
+            $permissionModel = config('admin.database.permissions_model');
+            $roleModel = config('admin.database.roles_model');
+
+            $adminUserModel = new $userModel();
+            $adminUserModel->username = $form->account;
+            $adminUserModel->name = $form->name;
+            $adminUserModel->password = Hash::make($form->password);
+            $adminUserModel->saveOrFail();
+
+            $adminUserModel->roles()->attach(3);
+        });
 
         return $form;
     }
