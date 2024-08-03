@@ -30,7 +30,7 @@ class TeacherController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
         $grid->column('account', __('Account'));
-        $grid->column('password', __('Password'));
+//        $grid->column('password', __('Password'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -69,22 +69,12 @@ class TeacherController extends AdminController
         $form->text('name', __('Name'))->rules('required');
         $form->text('account', __('Account'))->rules('required');
         $form->password('password', __('Password'))->rules('required');
-
-        $form->saving(function (Form  $form){
-            // 同时创建admin管理员
-            $userModel = config('admin.database.users_model');
-            $permissionModel = config('admin.database.permissions_model');
-            $roleModel = config('admin.database.roles_model');
-
-            $adminUserModel = new $userModel();
-            $adminUserModel->username = $form->account;
-            $adminUserModel->name = $form->name;
-            $adminUserModel->password = Hash::make($form->password);
-            $adminUserModel->saveOrFail();
-
-            $adminUserModel->roles()->attach(3);
+        $form->saving(function (Form $form) {
+//            var_dump($form->password,$form->model()->password);die;
+            if ($form->password && $form->model()->password != $form->password) {
+                $form->password = Hash::make($form->password);
+            }
         });
-
         return $form;
     }
 }
