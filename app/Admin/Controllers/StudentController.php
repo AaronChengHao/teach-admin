@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Hash;
 
 class StudentController extends AdminController
 {
@@ -29,7 +30,7 @@ class StudentController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
         $grid->column('account', __('Account'));
-        $grid->column('password', __('Password'));
+//        $grid->column('password', __('Password'));
         $grid->column('class', __('Class'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
@@ -71,7 +72,11 @@ class StudentController extends AdminController
         $form->text('account', __('Account'))->rules('required');
         $form->password('password', __('Password'))->rules('required');
         $form->text('class', __('Class'))->rules('required');
-
+        $form->saving(function (Form $form) {
+            if ($form->password && $form->model()->password != $form->password) {
+                $form->password = Hash::make($form->password);
+            }
+        });
         return $form;
     }
 }

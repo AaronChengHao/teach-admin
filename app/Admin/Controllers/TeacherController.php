@@ -70,7 +70,6 @@ class TeacherController extends AdminController
         $form->text('account', __('Account'))->rules('required');
         $form->password('password', __('Password'))->rules('required');
         $form->saving(function (Form $form) {
-//            var_dump($form->password,$form->model()->password);die;
             if ($form->password && $form->model()->password != $form->password) {
                 $form->password = Hash::make($form->password);
             }
