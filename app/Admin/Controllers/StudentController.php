@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class StudentController extends AdminController
@@ -34,6 +35,9 @@ class StudentController extends AdminController
         $grid->column('class', __('Class'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
+
+
+        $grid->model()->where('teacher_account', Auth::user()->username)->orderBy('id', 'desc');
 
         return $grid;
     }
@@ -76,6 +80,7 @@ class StudentController extends AdminController
             if ($form->password && $form->model()->password != $form->password) {
                 $form->password = Hash::make($form->password);
             }
+            $form->model()->teacher_account = Auth::user()->username;
         });
         return $form;
     }

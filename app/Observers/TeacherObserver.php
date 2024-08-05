@@ -12,7 +12,7 @@ class TeacherObserver
      *
      * @return void
      */
-    public function creating(Teacher $teacher)
+    public function created(Teacher $teacher)
     {
         $userModel = config('admin.database.users_model');
 //            $permissionModel = config('admin.database.permissions_model');
@@ -20,10 +20,10 @@ class TeacherObserver
         $adminUserModel = new $userModel();
         $adminUserModel->username = $teacher->account;
         $adminUserModel->name = $teacher->name;
-        $adminUserModel->password = Hash::make($teacher->password);
+        $adminUserModel->password = $teacher->password;
         $adminUserModel->saveOrFail();
         $adminUserModel->roles()->attach(3);
-        $teacher->password = Hash::make($teacher->password);
+//        $teacher->password = Hash::make($teacher->password);
     }
 
     /**
